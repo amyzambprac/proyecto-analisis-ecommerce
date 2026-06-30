@@ -32,24 +32,140 @@ Analizar datos de ventas de productos de regalo y estilo de vida para identifica
 ### Datos utilizados:
 Para este análisis se usaron dos datasets abiertos del sitio web kaggle.com. El primer dataset corresponde al registro de ventas y el segundo a transacciones en el sitio web de dos diferentes ventas retail en la modalidad de e-commerce.
 
-### Información de los datasets:
+### 2. Información de los datasets:
+### Organización de los datasets:
 El primer dataset registró ventas retail online de una tienda localizada en Reino Unido de dos periodos (2009-2010 y 2010-2011) sobre productos de regalo y estilo de vida, entre los cuales están artículos para el hogar, estacionales y de regalo, que se han vendido en diferentes regiones. La tabla contiene filas con información como: invoice, stockcode, descripción, cantidad, fecha, precio, customer ID y país.
+
+![Diagrama de Relación de Base de Datos - E-commerce](diagrama-er.png)
+
 El segundo dataset registró las transacciones de ventas e-commerce a través de un sitio web recolectados en un período de 4.5 meses. La tabla contiene filas con información como: todos los eventos registrados de cada usuario que visitó el sitio web, otra de las propiedades sobre los productos de venta y las categorías de los mismos.
 
-### Organización de los datasets:
+### Relación y estructura de las tablas:
 El dataset que registra las ventas contiene una tabla llamada online_retail y el dataset que registra las transacciones de las ventas tiene 3 tablas, una de ellas se llama category_tree, events y propiedades.
 Estos datasets se relacionan mediante el ID de la llaves (primaria y foránea), lo cual usé para unir las tablas.
 
-### 2. Staging:
+### 3. Staging:
 ### Análisis exploratorio de los datasets en Excel/Power Query:
 1. Estandarización de encabezados y verificación de tipos de datos.
 2. Migración del procesamiento de datos a Power Query para optimizar la carga de memoria del conjunto de datos.
 3. Transformación de la fecha mediante la fórmula:
                    #datetime(1970, 1, 1, 0, 0, 0) + #duration(0, 0, 0, [timestamp] / 1000)
    
-### Diagrama entidad-relación:
+### 4. Intermediate:
 
+### Consulta de datos con SQL
 
+1. Comencé por la creación de una tabla unificada de los dos períodos de ventas (2009-2010 / 2010-2011) y otra para las registrar las transacciones, categorías y propiedades.
+   
+```sql
+CREATE TABLE online_retail_2009_2010 (
+    invoice_id VARCHAR(50),
+    item_id VARCHAR(50),   
+    description VARCHAR(200),
+    quantity INT,
+    invoice_date TIMESTAMP,
+    unit_price VARCHAR(50), 
+    customer_id INT,
+    country VARCHAR(100)
+);
+#######
+----- Cambié las comas por puntos en los precios -----
+UPDATE online_retail_2009_2010
+SET unit_price = REPLACE(unit_price, ',', '.');
+----- Convertí la columna de unit_price a tipo númerico real -----
+ALTER TABLE online_retail_2009_2010
+ALTER COLUMN unit_price TYPE NUMERIC(10,2) USING unit_price::NUMERIC;
+#######
+CREATE TABLE online_retail_2010_2011 (
+    invoice_id VARCHAR(50),
+    item_id VARCHAR(50),   
+    description VARCHAR(200),
+    quantity INT,
+    invoice_date TIMESTAMP,
+    unit_price VARCHAR(50), 
+    customer_id INT,
+    country VARCHAR(100)
+);
+#######
+----- Cambié las comas por puntos en los precios -----
+UPDATE online_retail_2010_2011
+SET unit_price = REPLACE(unit_price, ',', '.');
+----- Convertí la columna de unit_price a tipo númerico real -----
+ALTER TABLE online_retail_2010_2011
+ALTER COLUMN unit_price TYPE NUMERIC(10,2) USING unit_price::NUMERIC;
+----- Uní las tablas de los dos períodos -----
+CREATE TABLE ventas_totales AS
+SELECT * FROM online_retail_2009_2010
+UNION ALL
+SELECT * FROM online_retail_2010_2011;
+----- Confirmé que el número total de filas sea la sumatoria de las dos tablas-----
+SELECT COUNT(*) AS total_filas_proyecto FROM ventas_totales;
+#######
+CREATE TABLE category_trans (
+category_id VARCHAR(50),
+parent_id VARCHAR(50)
+);
+#######
+CREATE TABLE events_trans (
+timestamp_raw VARCHAR(100),
+visitor_id VARCHAR(50),
+event_type VARCHAR(50),
+item_id VARCHAR(50),
+transaction_id VARCHAR(50),
+time_real TIMESTAMP
+);
+#######
+CREATE TABLE proper1_trans (
+timestamp_raw VARCHAR(100),
+item_id VARCHAR(50),
+property_name VARCHAR(100),
+property_value TEXT,
+prop_time VARCHAR(100)
+);
+----- Transformé los datos correspondientes a el tiempo -----
+SELECT * FROM proper1_trans LIMIT 10;
+UPDATE proper1_trans
+SET proper1_trans = REPLACE(proper_time, ',', '.');
+#######
+CREATE TABLE proper2_trans  (
+timestamp_raw VARCHAR(100),
+item_id VARCHAR(50),
+property_name VARCHAR(100),
+property_value TEXT,
+prop_time VARCHAR(100)
+);
+----- Transformé los datos correspondientes a el tiempo -----
+SELECT * FROM proper2_trans LIMIT 10;
+UPDATE proper2_trans
+SET proper2_trans = REPLACE(proper_time, ',', '.');
+----- Uní las tablas de los dos períodos -----
+CREATE TABLE properties_totales AS
+SELECT * FROM proper1_trans 
+UNION ALL
+SELECT * FROM proper2_trans
+----- Confirmé que el número total de filas sea la sumatoria de las dos tablas-----
+SELECT COUNT(*) AS properties_total FROM properties_totales;
+```
+2. Transformé el formato de los archivos de Excel de .xsl a .csv. para introducir el conjunto de datos a SQL, sin embargo algunos contenían una gran cantidad de datos que no se pueden transformar a ese formato directamente, para esos archivos usé DAX studio para transformar algunos de ellos (eventos y propiedades).
+   
+3. Realicé las consultas que me permitirán encontrar las respuestas a las preguntas de análisis planteadas.
 
+### ¿Que producto fue el más rentable en el último período (2010-2011)?
+```sql
+CREATE VIEW mas_rentabilidad AS
+SELECT 
+    item_id,
+    SUM(unit_price * quantity) AS rentabilidad_total
+FROM ventas_totales
+WHERE invoice_date BETWEEN '2010-01-01' AND '2011-12-31'
+GROUP BY item_id
+ORDER BY rentabilidad_total DESC
+LIMIT 10;
+```
+**Resultado:** 
 
+El item_id 22423 registró la mayor rentabilidad con un valor de $327813.65 generados.
 
+**Observación:**
+
+El segundo item_id con mayor rentabilidad está registrado como DOT y no con un valor numérico, por lo tanto se debe definir si es un código de algún item u otro concepto.
