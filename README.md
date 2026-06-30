@@ -1,6 +1,7 @@
-# proyecto-analisis-ecommerce
-Análisis de rentabilidad y conversión de usuarios de E-commerce.
-Rol: Junior Data Analyst
+## proyecto-analisis-ecommerce
+# Análisis de rentabilidad y conversión de usuarios de E-commerce
+
+### Rol: Junior Data Analyst
 
 ## 📊 Dashboard Interactivo
 🔗[Ver Dashboard en Looker Studio](https://datastudio.google.com/embed/u/0/reporting/4837de8f-0806-4f11-837f-1b2204bc17ce/page/MfQzF)
