@@ -544,13 +544,83 @@ FROM metricas_por_item m
 LEFT JOIN nombres_productos n ON m.item_id = n.item_id
 WHERE m.carritos_creados > 0
 ORDER BY carritos_creados DESC;
+```
+**Resultado:**
+La tasa de abandono de carrito de compra de este negocio de ecommerce es de 64.40%, es decir, que de cada 100 intentos de compra 64 no se llevan a término. Durante los 3 años analizados (2009, 2010, 2011) se abandonaron 161 carritos en la página web de 250 carritos que fueron creados y solo 89 carritos terminaron en compra. 
+
+### Horario crítico
+```sql
+CREATE VIEW mayortrafico_pocaconversion AS
+WITH metricas_por_hora AS (
+SELECT 
+EXTRACT(HOUR FROM time_real) AS hora,
+COUNT(*) FILTER (WHERE event_type = 'view') AS vistas,
+COUNT(*) FILTER (WHERE event_type = 'transaction') AS compras
+FROM eventos
+GROUP BY EXTRACT(HOUR FROM time_real)
+)
+SELECT 
+hora,
+vistas,
+compras,
+ROUND((compras::numeric / vistas) * 100, 2) AS conversion_rate
+FROM metricas_por_hora
+ORDER BY vistas DESC
+```
+**Resultado:**
+La franja horaria de mayor tráfico y menor conversión de usuarios a las 21 p.m. con un total de 785 vistas en la página web y a su vez solo un 0.51% de usuarios que terminan una compra. Por otra parte, se encontró que la franja horaria de mayor tráfico y mayor conversión a las 17 p.m. con un total de 14 compras y 836 visitas en la página.
+
+### Purchase-to-view rate
+```sql
+CREATE VIEW purchase_to_view_productos AS
+WITH datos_filtrados AS (
+SELECT 
+item_id,
+COUNT(*) FILTER (WHERE event_type = 'view') AS vistas,
+COUNT(*) FILTER (WHERE event_type = 'transaction') AS compras
+FROM eventos
+GROUP BY item_id
+HAVING COUNT(*) FILTER (WHERE event_type = 'view') > 5
+),
+nombres_productos AS (
+SELECT DISTINCT item_id, description 
+FROM ventas_totales
+)
+SELECT 
+df.item_id,
+COALESCE(np.description, 'Producto sin ventas registradas') AS description,
+df.vistas,
+df.compras,
+ROUND((df.compras::numeric / df.vistas) * 100, 2) AS purchase_to_view_ratio
+FROM datos_filtrados df
+LEFT JOIN nombres_productos np ON df.item_id = np.item_id
+ORDER BY purchase_to_view_ratio DESC;
+```
+**Resultado:**
+El item #281211 fue el producto que recibió más vistas y logró que más usuarios compraran el producto, con un 28.57% de purchase-to-view rate, donde se obtuvo que recibió 7 visitas y 2 de ellas finalizaron en compra. 
+
+## Insights principales:
+
+### 1. Eficiencia horaria
+
+El tráfico de usuarios aumenta significativamente durante las horas de la tarde entre las 15:00 y 21:00 horas sin embargo es infeciente durante la madrugada (potencialmente bots, rastreadores o usuarios sin intención de compra).  Se sugiere reconsiderar la estrategia y presupuesto de pauta digital durante el resto de las horas que no presenta un tráfico representativo (durante la madrugada y la mañana) para maximizar el retorno de inversión.
+
+### 2. Fricción en el checkout
+
+Se encontró que existe una tasa de abandono del 64.4%, lo que nos indica dos cosas: la estrategia de marketing está generando tráfico e intención de compra a los usuarios; y que el proceso se detiene al momento de pagar. Se sugiere realizar una revisión UX/UI en el proceso de pago e investigar si los posibles factores de barrera que detienen al usuario al comprar como costos de envío sorpresa, pasarelas de pago que fallan, formulario de envío no intuitivo o muy largo, registro de cupones no válidos u otros. 
+
+### 3. Dependencia de Mercado
+
+El negocio tiene ventas predominantes en Europa pero especialmente dependencia del mercado dentro del Reino Unido. Esto podría representar un riesgo si existen cambios en su economía y/o regulaciones en esa región. Se recomienda perfilar al consumidor de UK, sus preferencias y recomendaciones sobre los productos, para replicar las estrategias de marketing en otras parte de Europa, además de empezar a estudiar el mercado en otras regiones para introducirse en ellos.
 
 
+### 4. Limpieza de catálogo
 
+El item #22423 es el producto que registró mayor profit estimado, sin embargo también se encontraron productos que registraron pérdidas, esto podría ser causado como un costo de almacenamiento o logística por encima de su valor de retorno. No todos los productos que se venden generan ingresos. Se recomienda una limpieza de catálogo, ajustar precios, descontinuar productos con menor rentabilidad, aplicar estrategias de marketing en temporadas altas como podría ser de octubre a diciembre (cuando la gente busca decorar sus casas con temáticas festivas), crear combos o promociones cruzadas para rotar productos menos vendidos con los productos estrella.
 
+## Conclusión:
 
-
-
+Este negocio de e-commerce sobre artículos de estilo de vida y regalo tiene una ineficiencia en su tasa de conversión de usuarios sin embargo tiene una alta eficiencia operativa que podría optimizarse con una limpieza de catálogo y priorizando la ventas de los items con más rentabilidad en los horarios de mayor tráfico en la página web; además de buscar estrategias de marketing para expandir sus ventas a otras regiones y en fechas o temporadas especiales cuando sus clientes buscan mejorar sus espacios con productos de temporada. 
 
 
 
