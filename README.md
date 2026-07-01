@@ -169,3 +169,38 @@ El item_id 22423 registró la mayor rentabilidad con un valor de $327813.65 gene
 **Observación:**
 
 El segundo item_id con mayor rentabilidad está registrado como DOT y no con un valor numérico, por lo tanto se debe definir si es un código de algún item u otro concepto.
+
+### ¿Que producto fue el menor rentable en el último período (2010-2011)?
+```sql
+CREATE VIEW menor_rentabilidad AS
+SELECT 
+    item_id,
+SUM(unit_price * quantity) AS rentabilidad_total
+FROM ventas_totales
+WHERE invoice_date BETWEEN '2010-01-01' AND '2011-12-31'
+GROUP BY item_id
+ORDER BY rentabilidad_total ASC
+LIMIT 10;
+```
+**Resultado:** 
+
+El item_id registrado como AMAZONFEE representa una rentabilidad de               - $260763.58
+
+**Observación:**
+
+El segundo item_id con menos rentabilidad está registrado como “B” y no con un valor numérico, por lo tanto se debe definir si es un código de algún item u otro concepto.
+
+### % Crecimiento mensual (MoM) Nov 2011 - Dic 2011
+
+```sql
+CREATE VIEW nov11dic11_mom AS
+SELECT 
+EXTRACT(MONTH FROM invoice_date),
+SUM(unit_price*quantity) AS rentabilidad_mensual
+FROM ventas_totales
+#######
+SELECT *,
+LAG(rentabilidad_mensual) OVER (ORDER BY extract) AS rentabilidad_anterior,
+((rentabilidad_mensual - LAG(rentabilidad_mensual) OVER (ORDER BY extract))*100.0)/LAG(rentabilidad_mensual) OVER (ORDER BY extract) AS growth_mensual
+FROM nov11dic11_mom
+```
