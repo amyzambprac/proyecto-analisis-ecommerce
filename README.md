@@ -7,7 +7,7 @@
 🔗[Ver Dashboard en Looker Studio](https://datastudio.google.com/embed/u/0/reporting/4837de8f-0806-4f11-837f-1b2204bc17ce/page/MfQzF)
 
 ## Resumen:
-En este proyecto de análisis de datos se explorará la eficiencia y rentabilidad de un negocio de e-commerce de artículos para el hogar y estilo de vida a nivel global. Se enfocará principalmente en conocer la eficiencia de la página web, rentabilidad de los productos, conversión de usuarios, franjas horarias con mayor tráfico y zona geográfica predominante en ventas. Se utilizará datasets de ventas y transacciones de la página web, que se limpiará, transformará y ordenará para ser procesada y analizada. Los resultados de este análisis serán usadas para conocer como se está moviendo el negocio en los tres últimos años de operación y establecer los insights que más impactan al negocio.
+En este proyecto analicé 3 años de datos de ventas y comportamiento de usuarios de un e-commerce global de artículos de regalo y estilo de vida, usando SQL para cruzar datos de transacciones y eventos web y evaluar rentabilidad, conversión y patrones de tráfico. Detecté una tasa de abandono de carrito del 64.4%, esta tasa estaba concentrada justo en el horario de mayor tráfico (21h, con solo 0.51% de conversión), mientras que el horario de las 17h combina alto tráfico y alta conversión de usuarios. También identifiqué una fuerte dependencia del mercado del Reino Unido y productos del catálogo que generan pérdidas en lugar de ganancias. Concluí con algunos insights accionables como: optimizar el checkout, reasignar el presupuesto de marketing hacia las franjas horarias de mayor conversión, limpiar el catálogo de productos no rentables y diversificar mercados podría reducir la fricción que hoy hace perder cerca de 2 de cada 3 intentos de compra, mejorando directamente el revenue y el retorno de inversión publicitaria.
 
 ## Fase de consulta: 
 La empresa de e-commerce de productos de regalo y estilo de vida enfrenta una falta de visibilidad sobre la eficiencia real de su plataforma digital durante el último año. 
@@ -546,7 +546,10 @@ WHERE m.carritos_creados > 0
 ORDER BY carritos_creados DESC;
 ```
 **Resultado:**
-La tasa de abandono de carrito de compra de este negocio de ecommerce es de 64.40%, es decir, que de cada 100 intentos de compra 64 no se llevan a término. Durante los 3 años analizados (2009, 2010, 2011) se abandonaron 161 carritos en la página web de 250 carritos que fueron creados y solo 89 carritos terminaron en compra. 
+
+El dataset de ventas (`ventas_totales`) cubre 3 años completos (2009-2011), mientras que el dataset de comportamiento web (`eventos`) cubre solo un período de 4.5 meses. Por eso las métricas de tráfico, conversión y abandono de carrito reflejan una ventana de tiempo mucho más corta que las de revenue y rentabilidad, y no deben compararse directamente en escala.
+
+La tasa de abandono de carrito de compra de este negocio de ecommerce es de 64.40%, es decir, que de cada 100 intentos de compra 64 no se llevan a término. Durante el período de 4.5 meses registrado en el dataset de eventos, se abandonaron 161 carritos de un total de 250 que fueron creados, y solo 89 carritos terminaron en compra.
 
 ### Horario crítico
 ```sql
