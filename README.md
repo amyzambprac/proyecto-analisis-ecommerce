@@ -188,7 +188,7 @@ LIMIT 10;
 El item registrado como AMAZONFEE representa una rentabilidad negativa de -$260763.58
 
 **Observación:**
-El segundo item con menos rentabilidad está registrado como “B” y no con un valor numérico, por lo tanto se debe definir si es un código de algún item u otro concepto.
+AMAZONFEE, DOT, B, POST, M y BANK CHARGES son códigos de cargos operativos (comisiones, envíos, ajustes), no productos — se excluyen del ranking en el análisis por producto.
 
 ### % Crecimiento mensual (MoM) Nov 2011 - Dic 2011
 Este negocio de tipo ecommerce se dedica a la venta de artículos de estilo de vida y regalos, por lo tanto analicé el mes de noviembre de 2011 con respecto a diciembre de 2011, ya que este último es a nivel global un mes donde se realizan muchas celebraciones con regalos.
