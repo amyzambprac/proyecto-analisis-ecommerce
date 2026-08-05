@@ -125,7 +125,7 @@ prop_time VARCHAR(100)
 ----- Transformé los datos correspondientes a el tiempo -----
 SELECT * FROM proper1_trans LIMIT 10;
 UPDATE proper1_trans
-SET proper1_trans = REPLACE(proper_time, ',', '.');
+SET prop_time = REPLACE(prop_time, ',', '.');
 #######
 CREATE TABLE proper2_trans  (
 timestamp_raw VARCHAR(100),
@@ -134,11 +134,15 @@ property_name VARCHAR(100),
 property_value TEXT,
 prop_time VARCHAR(100)
 );
+
 ----- Transformé los datos correspondientes a el tiempo -----
+
 SELECT * FROM proper2_trans LIMIT 10;
 UPDATE proper2_trans
-SET proper2_trans = REPLACE(proper_time, ',', '.');
+SET prop_time = REPLACE(prop_time, ',', '.');
+
 ----- Uní las tablas de los dos períodos -----
+
 CREATE TABLE properties_totales AS
 SELECT * FROM proper1_trans 
 UNION ALL
@@ -357,7 +361,7 @@ El profit estimado de este negocio ecommerce es de $7,714,900.2200
 
 ### Profit estimado por año
 ```sql
-CREATE VIEW profit_estimado_anual
+CREATE VIEW profit_estimado_anual AS
 SELECT
 EXTRACT(YEAR FROM invoice_date) AS anio,
 SUM(unit_price * quantity) AS revenue_total,
@@ -449,7 +453,7 @@ WITH metricas_conversion AS (
 SELECT
 COUNT(DISTINCT visitor_id) AS total_visitantes,
 COUNT(DISTINCT CASE WHEN transaction_id IS NOT NULL AND transaction_id <> '[null]' THEN visitor_id END) AS visitantes_compradores
-FROM eventos
+FROM events_trans
 )
 SELECT
 total_visitantes,
@@ -468,7 +472,7 @@ SELECT
 item_id,
 COUNT(DISTINCT visitor_id) AS visitantes_totales,
 COUNT(DISTINCT CASE WHEN transaction_id IS NOT NULL AND transaction_id <> '[null]' THEN visitor_id END) AS compradores_totales
-FROM eventos
+FROM events_trans
 GROUP BY item_id
 ),
 nombres_productos AS (
@@ -496,7 +500,7 @@ WITH totales_clicks AS (
 SELECT 
 COUNT(*) FILTER (WHERE event_type = 'addtocart') AS carritos_totales,
 COUNT(*) FILTER (WHERE event_type = 'transaction') AS compras_totales
-FROM eventos
+FROM events_trans
 )
 SELECT 
 carritos_totales,
@@ -510,14 +514,14 @@ WITH metricas_globales AS (
 SELECT 
 COUNT(*) FILTER (WHERE event_type = 'addtocart') AS carritos,
 COUNT(*) FILTER (WHERE event_type = 'transaction') AS compras
-FROM eventos
+FROM events_trans
 ),
 metricas_por_item AS (
 SELECT 
 item_id,
 COUNT(*) FILTER (WHERE event_type = 'addtocart') AS carritos_creados,
 COUNT(*) FILTER (WHERE event_type = 'transaction') AS compras_exitosas
-FROM eventos
+FROM events_trans
 GROUP BY item_id
 ),
 nombres_productos AS (
@@ -559,7 +563,7 @@ SELECT
 EXTRACT(HOUR FROM time_real) AS hora,
 COUNT(*) FILTER (WHERE event_type = 'view') AS vistas,
 COUNT(*) FILTER (WHERE event_type = 'transaction') AS compras
-FROM eventos
+FROM events_trans
 GROUP BY EXTRACT(HOUR FROM time_real)
 )
 SELECT 
@@ -581,7 +585,7 @@ SELECT
 item_id,
 COUNT(*) FILTER (WHERE event_type = 'view') AS vistas,
 COUNT(*) FILTER (WHERE event_type = 'transaction') AS compras
-FROM eventos
+FROM events_trans
 GROUP BY item_id
 HAVING COUNT(*) FILTER (WHERE event_type = 'view') > 5
 ),
