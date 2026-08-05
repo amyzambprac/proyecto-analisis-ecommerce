@@ -355,12 +355,13 @@ CREATE VIEW profit_total AS
 SELECT
 SUM(unit_price*quantity) * 0.40 AS profit_estimado
 FROM ventas_totales
+WHERE quantity > 0
 ```
 **Resultado:**
 El profit estimado de este negocio ecommerce es de $8,325,716.79
 
 **Observación:**
-Se asume un margen de ganancia estimado del 40% sobre el revenue (0.40%), cifra estándar de referencia para e-commerce de retail, ya que el dataset no incluye costos reales.
+Se asume un margen de ganancia estimado del 40% sobre el revenue (0.40), cifra estándar de referencia para e-commerce de retail, ya que el dataset no incluye costos reales.
 
 ### Profit estimado por año
 ```sql
@@ -383,7 +384,7 @@ Se encontró que el profit estimado ha tenido un crecimiento exponencial del 200
 - **Año 2011:** 3,928,332.9120
 
 **Observación:**
-Se asume un margen de ganancia estimado del 40% sobre el revenue (0.40%), cifra estándar de referencia para e-commerce de retail, ya que el dataset no incluye costos reales.
+Se asume un margen de ganancia estimado del 40% sobre el revenue (0.40), cifra estándar de referencia para e-commerce de retail, ya que el dataset no incluye costos reales.
 
 
 ### Profit estimado por producto - Top 10 de producto con mayor y menor profit
@@ -408,7 +409,7 @@ LIMIT 10;
 El producto con mayor profit estimado es el item #22423 con una rentabilidad generada de $137,825.300; y el producto con menor profit estimado es el item #35930 con un valor de $0.1520. Los demás productos que conforman el ranking de 10 productos con mayor y menor profit estimado se colocan en el dashboard de Looker Studio.
 
 **Observación:**
-Se asume un margen de ganancia estimado del 40% sobre el revenue (0.40%), cifra estándar de referencia para e-commerce de retail, ya que el dataset no incluye costos reales.
+Se asume un margen de ganancia estimado del 40% sobre el revenue (0.40), cifra estándar de referencia para e-commerce de retail, ya que el dataset no incluye costos reales.
 
 
 ### Clientes únicos
@@ -621,7 +622,7 @@ El item #281211 fue el producto que recibió más vistas y logró que más usuar
 
 ### 1. Eficiencia horaria
 
-El tráfico de usuarios aumenta significativamente durante las horas de la tarde entre las 15:00 y 21:00 horas sin embargo es infeciente durante la madrugada (potencialmente bots, rastreadores o usuarios sin intención de compra).  Se sugiere reconsiderar la estrategia y presupuesto de pauta digital durante el resto de las horas que no presenta un tráfico representativo (durante la madrugada y la mañana) para maximizar el retorno de inversión.
+El tráfico de usuarios aumenta significativamente durante las horas de la tarde entre las 15:00 y 21:00 horas sin embargo es inefeciente durante la madrugada (potencialmente bots, rastreadores o usuarios sin intención de compra).  Se sugiere reconsiderar la estrategia y presupuesto de pauta digital durante el resto de las horas que no presenta un tráfico representativo (durante la madrugada y la mañana) para maximizar el retorno de inversión.
 
 ### 2. Fricción en el checkout
 
