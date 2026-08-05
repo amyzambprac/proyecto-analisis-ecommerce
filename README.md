@@ -347,7 +347,7 @@ ORDER BY revenue_total ASC
 LIMIT 10;
 ```
 **Resultado:**
-El producto más rentable es el item #22423 con una rentabilidad generada de $344,563.25; y el menos rentable es el item #35930 con un valor de $0.38. Los demás productos que conforman el ranking de 10 productos con mayor y menor revenue se colocan en el dashboard de Looker Studio.
+El producto más rentable (2009-2011) es el item #22423 con una rentabilidad generada de $344,563.25; y el menos rentable es el item #35930 con un valor de $0.38. Los demás productos que conforman el ranking de 10 productos con mayor y menor revenue se colocan en el dashboard de Looker Studio.
 
 ### Profit estimado consolidado del período 2009-2011
 ```sql
@@ -358,6 +358,9 @@ FROM ventas_totales
 ```
 **Resultado:**
 El profit estimado de este negocio ecommerce es de $7,714,900.2200
+
+**Observación:**
+Se asume un margen de ganancia estimado del 40% sobre el revenue (0.40%), cifra estándar de referencia para e-commerce de retail, ya que el dataset no incluye costos reales.
 
 ### Profit estimado por año
 ```sql
@@ -379,6 +382,10 @@ Se encontró que el profit estimado ha tenido un crecimiento exponencial del 200
 - **Año 2010:** 4,067,109.5760
 - **Año 2011:** 3,928,332.9120
 
+**Observación:**
+Se asume un margen de ganancia estimado del 40% sobre el revenue (0.40%), cifra estándar de referencia para e-commerce de retail, ya que el dataset no incluye costos reales.
+
+
 ### Profit estimado por producto - Top 10 de producto con mayor y menor profit
 ```sql
 CREATE VIEW profit_por_producto AS
@@ -399,6 +406,10 @@ LIMIT 10;
 
 **Resultado:**
 El producto con mayor profit estimado es el item #22423 con una rentabilidad generada de $137,825.300; y el producto con menor profit estimado es el item #35930 con un valor de $0.1520. Los demás productos que conforman el ranking de 10 productos con mayor y menor profit estimado se colocan en el dashboard de Looker Studio.
+
+**Observación:**
+Se asume un margen de ganancia estimado del 40% sobre el revenue (0.40%), cifra estándar de referencia para e-commerce de retail, ya que el dataset no incluye costos reales.
+
 
 ### Clientes únicos
 ```sql
