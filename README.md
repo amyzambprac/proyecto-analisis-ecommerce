@@ -288,7 +288,7 @@ GROUP BY numero_dia
 ORDER BY numero_dia ASC;
 ```
 **Resultado:**
-El día que registró más ventas fue el jueves con un total de ingresos de $3,995,032.01, con 2,307.505 unidades vendidas. Por el contrario, el día con menos ventas es el sábado con $9,803.05 con 5033 unidades vendidas. 
+El día que registró más ventas fue el jueves con un total de ingresos de $3,995,032.01, con 2,307,505 unidades vendidas. Por el contrario, el día con menos ventas es el sábado con $9,803.05 con 5033 unidades vendidas. 
 
 ### ¿Qué franjas horarias registran más ingresos y menos ingresos?
 ```sql
@@ -357,7 +357,7 @@ SUM(unit_price*quantity) * 0.40 AS profit_estimado
 FROM ventas_totales
 ```
 **Resultado:**
-El profit estimado de este negocio ecommerce es de $7,714,900.2200
+El profit estimado de este negocio ecommerce es de $8,325,716.79
 
 **Observación:**
 Se asume un margen de ganancia estimado del 40% sobre el revenue (0.40%), cifra estándar de referencia para e-commerce de retail, ya que el dataset no incluye costos reales.
