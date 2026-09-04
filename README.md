@@ -4,7 +4,7 @@
 ### Rol: Junior Data Analyst
 
 ## 📊 Dashboard Interactivo
-🔗[Ver Dashboard en Looker Studio](https://datastudio.google.com/embed/u/0/reporting/4837de8f-0806-4f11-837f-1b2204bc17ce/page/MfQzF)
+🔗[Ver Dashboard en Looker Studio](https://datastudio.google.com/embed/reporting/7515f3ad-c786-42b8-8938-ac588d20743b/page/qlD)
 
 ## Resumen:
 En este proyecto analicé 3 años de datos de ventas y comportamiento de usuarios de un e-commerce global de artículos de regalo y estilo de vida, usando SQL para cruzar datos de transacciones y eventos web y evaluar rentabilidad, conversión y patrones de tráfico. Detecté una tasa de abandono de carrito del 64.4%, esta tasa estaba concentrada justo en el horario de mayor tráfico (21h, con solo 0.51% de conversión), mientras que el horario de las 17h combina alto tráfico y alta conversión de usuarios. También identifiqué una fuerte dependencia del mercado del Reino Unido y productos del catálogo que generan pérdidas en lugar de ganancias. Concluí con algunos insights accionables como: optimizar el checkout, reasignar el presupuesto de marketing hacia las franjas horarias de mayor conversión, limpiar el catálogo de productos no rentables y diversificar mercados podría reducir la fricción que hoy hace perder cerca de 2 de cada 3 intentos de compra, mejorando directamente el revenue y el retorno de inversión publicitaria.
